@@ -24,7 +24,7 @@ const crearProducto = async (req, res=response)=>{
     }
     // Generar la data que quiero guardar
     const data = {
-        nombre,
+        nombre: nombre.toUpperCase(),
         usuario: req.usuario._id,
         categoria,
         precio,
@@ -42,7 +42,70 @@ const crearProducto = async (req, res=response)=>{
 
 }
 
+const updateProducto = async (req, res)=>{
+
+    const {id} = req.params
+    const {estado, usuario, ...data} = req.body
+    data.nombre = data.nombre.toUpperCase()
+    data.usuario = req.usuario.id
+     const producto = await Producto.findByIdAndUpdate(id, data, {new: true})
+    res.json({
+
+        producto
+    })
+}
+
+// obtener productos - paginado - total - llamar método populate
+// toda info del usuario que creo el producto y el nombre la categoria
+const getProductos =async (req, res=response)=>{
+    const {limite = 5, desde = 0} = req.query
+    const query = {estado: true}
+    try {
+        const [total, productos] = await Promise.all([
+            Producto.countDocuments(query),
+            Producto.find(query)
+                .populate('usuario', 'nombre')
+                .populate('categoria', 'nombre')
+                .skip(Number(desde))
+                .limit(Number(limite))
+
+        ])
+
+
+        res.json({
+        total,
+        productos
+    })
+    } catch (e) {
+        console.log(e)
+    }
+
+}
+
+// obtener un producto por su id
+const getProductoById = async(req, res) => {
+    const {id} =req.params
+    const producto = await Producto.findById(id).populate('usuario', 'nombre').populate('categoria', 'nombre')
+    res.json({
+       producto
+    })
+}
+
+// Cambiar el estado de un producto a false
+const deleteProducto = async(req, res) =>{
+    const {id} = req.params
+   const producto = await Producto.findByIdAndUpdate(id, {estado: false}, {new: true})
+
+    res.json({
+        producto
+    })
+}
 module.exports = {
     crearProducto,
+    updateProducto,
+    getProductos,
+    getProductoById,
+    deleteProducto
+
 
 }

@@ -1,5 +1,6 @@
 const Role = require('../models/role')
 const Usuario = require('../models/usuario')
+const {Producto} = require("../models");
 const {Categoria} = require("../models");
 
 const esRolValido = async (rol = '') => {
@@ -30,9 +31,21 @@ const existeCategoria = async (id) => {
     }
 }
 
+// validador personalizado para verificar que existe el producto
+
+const existeProducto = async (id) => {
+    console.log(id)
+    const producto = await Producto.findById(id)
+    if(!producto){
+        throw new Error(`El producto con id: ${id} no existe`)
+    }
+}
+
+
 module.exports = {
     esRolValido,
     existeEmail,
     existeUsuarioPorId,
     existeCategoria,
+    existeProducto
 }
