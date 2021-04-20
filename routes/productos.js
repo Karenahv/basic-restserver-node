@@ -32,9 +32,6 @@ router.put('/:id',[
     validarJWT,
     check('id', 'No es un id de mongo válido').isMongoId(),
     check('id').custom(existeProducto),
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-    check('categoria', 'La categoria es obligatoria').not().isEmpty(),
-    check('categoria').custom(existeCategoria),
     validarCampos
 ] ,updateProducto)
 //obtener todos los productos

@@ -34,7 +34,6 @@ const existeCategoria = async (id) => {
 // validador personalizado para verificar que existe el producto
 
 const existeProducto = async (id) => {
-    console.log(id)
     const producto = await Producto.findById(id)
     if(!producto){
         throw new Error(`El producto con id: ${id} no existe`)

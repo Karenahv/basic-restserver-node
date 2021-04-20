@@ -19,7 +19,7 @@ const crearProducto = async (req, res=response)=>{
     const productoDB = await Producto.findOne({nombre});
     if(productoDB){
         return res.status(400).json({
-            msg: `El producto ${productoDB.nombre} ya existe`
+            msg: `El producto con el nombre:  ${productoDB.nombre} ya existe`
         })
     }
     // Generar la data que quiero guardar
